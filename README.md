@@ -79,6 +79,11 @@ built on a Mac or by CI:
   macOS, Windows and Linux installers to a draft release. See
   [.github/workflows/build.yml](.github/workflows/build.yml).
 
+pdf.js 6 needs a recent JavaScript engine (iterator helpers, `Promise.try`); the app
+polyfills these ([src/polyfills.ts](src/polyfills.ts)) so the macOS web view, which uses the
+system WebKit, also works on older Safari versions. If the window ever comes up empty, a
+red box at the bottom prints the startup error (see `index.html`).
+
 The macOS app is **unsigned** unless you add the `APPLE_*` secrets used by the workflow.
 Gatekeeper then blocks the first launch: right-click the app → *Open*, or run
 `xattr -cr "/Applications/Folio PDF.app"`. The app targets macOS 13 or newer (WebKit

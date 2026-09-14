@@ -4,6 +4,41 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Folio PDF</title>
+    <script>
+      // Show startup failures (script load errors, exceptions while the bundle
+      // is evaluated) instead of leaving a blank window. Silent once the app
+      // has booted; runtime errors then go to the console and error boundary.
+      (function () {
+        function show(text) {
+          if (window.__folioBooted) return;
+          var el = document.getElementById("boot-error");
+          if (!el) {
+            el = document.createElement("pre");
+            el.id = "boot-error";
+            el.style.cssText =
+              "position:fixed;left:16px;right:16px;bottom:16px;z-index:99999;max-height:50vh;overflow:auto;margin:0;" +
+              "padding:12px 14px;border-radius:8px;background:#fff1f1;color:#a31212;border:1px solid #f0b4b4;" +
+              "font:12px/1.45 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap";
+            el.textContent = "Folio PDF could not start.\n\n";
+            (document.body || document.documentElement).appendChild(el);
+          }
+          el.textContent += text + "\n";
+        }
+        window.addEventListener(
+          "error",
+          function (e) {
+            var t = e.target;
+            if (t && t !== window && t.tagName) show("Failed to load " + t.tagName.toLowerCase() + ": " + (t.src || t.href));
+            else show((e.message || "Script error") + (e.filename ? "\n    at " + e.filename + ":" + e.lineno + ":" + e.colno : ""));
+          },
+          true
+        );
+        window.addEventListener("unhandledrejection", function (e) {
+          var r = e.reason;
+          show("Unhandled rejection: " + ((r && (r.stack || r.message)) || r));
+        });
+      })();
+    </script>
   </head>
 
   <body>

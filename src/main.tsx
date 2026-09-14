@@ -1,3 +1,4 @@
+import "./polyfills";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { ErrorBoundary } from "./components/ErrorBoundary";
@@ -8,6 +9,8 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <App />
   </ErrorBoundary>,
 );
+// Tells the boot-error catcher in index.html that startup got this far.
+(window as unknown as { __folioBooted: boolean }).__folioBooted = true;
 
 // Development hook so the app can be driven from the DevTools console / CDP.
 if (import.meta.env.DEV) {
